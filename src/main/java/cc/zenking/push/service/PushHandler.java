@@ -43,8 +43,7 @@ public abstract class PushHandler<T extends Payload> {
 	 * @return
 	 */
 	 public PushResult push(Object notify) {
-		 Object payload = build(notify);
-		 return send((T)payload);
+		 return send(build(notify));
 	 }
 	
 }
