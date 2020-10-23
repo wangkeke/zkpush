@@ -1,5 +1,8 @@
 package cc.zenking.push.service;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -22,16 +25,23 @@ public class HuaweiPushHandler extends PushHandler<HuaweiPayload> {
 	}
 
 	@Override
-	protected HuaweiPayload build(Object notify) {
+	public boolean init(boolean online) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected HuaweiPayload build(Map<String, Object> notify, String restrictedPackageName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	protected PushResult send(HuaweiPayload payload) {
+	protected PushResult send(HuaweiPayload message, List<String> regIds) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 
 

@@ -1,5 +1,8 @@
 package cc.zenking.push.service;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -14,12 +17,6 @@ import cc.zenking.push.vo.PushResult;
 @ConfigurationProperties("flyme")
 @Component
 public class FlymePushHandler extends PushHandler<FlymePayload> {
-	
-	private String AppId;
-	
-	private String AppKey;
-	
-	private String AppSecret;
 
 	@Override
 	public String matchPattern() {
@@ -28,16 +25,20 @@ public class FlymePushHandler extends PushHandler<FlymePayload> {
 	}
 
 	@Override
-	protected FlymePayload build(Object notify) {
+	public boolean init(boolean online) {
 		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected FlymePayload build(Map<String, Object> notify, String restrictedPackageName) {
 		return null;
 	}
 
 	@Override
-	protected PushResult send(FlymePayload payload) {
-		// TODO Auto-generated method stub
+	protected PushResult send(FlymePayload message, List<String> regIds) {
 		return null;
-	}	
+	}
 
 	
 	
