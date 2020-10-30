@@ -1,9 +1,42 @@
-EDUP: 
-EDUT: 
 env: 
   mode: 
     online: true
+edup: 
+  packageName: cc.zenking.eudp
+edut: 
+  packageName: cc.zenking.eudt
 miui:
-  AppId: 
-  AppKey: 
-  AppSecret: 
+  edupAppId: 1234567890
+  edupAppKey: 1234567890
+  edupAppSecret: 1234567890
+  edutAppId: '0987654321'
+  edutAppKey: '0987654321'
+  edutAppSecret: '0987654321'
+huawei:
+  edupAppId: 1234567890
+  edupAppKey: 1234567890
+  edupAppSecret: 1234567890
+  edutAppId: '0987654321'
+  edutAppKey: '0987654321'
+  edutAppSecret: '0987654321'
+oppo:
+  edupAppId: 1234567890
+  edupAppKey: 1234567890
+  edupAppSecret: 1234567890
+  edutAppId: '0987654321'
+  edutAppKey: '0987654321'
+  edutAppSecret: '0987654321'
+vivo:
+  edupAppId: 1234567890
+  edupAppKey: 1234567890
+  edupAppSecret: 1234567890
+  edutAppId: '0987654321'
+  edutAppKey: '0987654321'
+  edutAppSecret: '0987654321'
+flyme: 
+  edupAppId: 1234567890
+  edupAppKey: 1234567890
+  edupAppSecret: 1234567890
+  edutAppId: '0987654321'
+  edutAppKey: '0987654321'
+  edutAppSecret: '0987654321'

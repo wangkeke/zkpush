@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -15,7 +14,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import cc.zenking.push.vo.Payload;
 import cc.zenking.push.vo.PushResult;
 import lombok.extern.java.Log;
 /**
@@ -29,17 +27,15 @@ import lombok.extern.java.Log;
 public class PushService {
 	
 	private static Map<String, PushHandler<?>> pushHandlerMap = new HashMap<>(6);
-	private static final String APP_FAMILY = "EDUP";
-	private static final String APP_TEACHER = "EDUT";
 	
 	@Value("${env.mode.online:false}")
 	private boolean online;
 	
-	@Value("${EDUP:}")
-	private String EDUP;
+	@Value("${edup.packageName:}")
+	private String edupPackageName;
 	
-	@Value("${EDUT:}")
-	private String EDUT;
+	@Value("${edut.packageName:}")
+	private String edutPackageName;
 	
 	@Autowired
 	private ApplicationContext context;
@@ -49,7 +45,7 @@ public class PushService {
 	@PostConstruct
 	public void init() {
 		context.getBeansOfType(PushHandler.class).values().forEach(h -> {
-			h.setOnline(online);
+			h.init(this.online);
 			pushHandlerMap.put(h.matchPattern(), h);
 		});
 	}
@@ -65,21 +61,28 @@ public class PushService {
 		return null;
 	}
 	
-	private String getRestrictedPackageName(String app) {
-		if(APP_FAMILY.equalsIgnoreCase(app)) {
-			return EDUP;
+	private String getRestrictedPackageName(AppType appType) {
+		if(AppType.EDUP == appType) {
+			return edupPackageName;
 		}
-		if(APP_TEACHER.equalsIgnoreCase(app)) {
-			return EDUT;
+		if(AppType.EDUT == appType) {
+			return edutPackageName;
 		}
 		return null;
 	}
 	
-	public PushResult push(String app , Map<String, Object> notify , String... token) {
-		String restrictedPackageName = getRestrictedPackageName(app);
+	/**
+	 * 针对用户token的推送
+	 * @param app   APP标识  
+	 * @param notify
+	 * @param token
+	 * @return
+	 */
+	public PushResult push(AppType appType , Map<String, Object> notify , String... token) {
+		String restrictedPackageName = getRestrictedPackageName(appType);
 		if(restrictedPackageName==null) {
-			log.warning("不存在的APP应用：" + app);
-			return PushResult.fail("不存在的APP应用：" + app);
+			log.warning("不存在的APP应用：" + appType);
+			return PushResult.fail("不存在的APP应用：" + appType);
 		}
 		if(token.length==1) {			
 			for (String t : token) {				
@@ -88,7 +91,7 @@ public class PushService {
 					log.warning("未找到手机服务厂商，用户手机系统 " + token + " ,要发送的通知内容：" + notify.toString());
 					continue;
 				}
-				PushResult result = pushHandler.push(notify, restrictedPackageName, t);
+				PushResult result = pushHandler.push(appType , notify, restrictedPackageName, t);
 				log.info("推送的通知结果：" + result.toString());
 			}
 			return PushResult.ok();
@@ -108,10 +111,10 @@ public class PushService {
 				pushTokenList.add(t);
 			}
 			if(pushTokenMap.size()==0) {
-				return PushResult.fail("未找到手机服务厂商，用户手机系统 " + token + " ,要发送的" + app + "通知内容：" + notify.toString());
+				return PushResult.fail("未找到手机服务厂商，用户手机系统 " + token + " ,要发送的" + appType + "通知内容：" + notify.toString());
 			}
 			pushTokenMap.keySet().forEach(h -> {
-				h.push(notify, restrictedPackageName, pushTokenMap.get(h));
+				h.push(appType , notify, restrictedPackageName, pushTokenMap.get(h));
 			});
 			return PushResult.ok();
 		}
